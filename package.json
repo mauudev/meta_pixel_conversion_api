@@ -1,21 +1,31 @@
 {
   "name": "meta_pixel_conversion_api",
-  "version": "1.0.0",
-  "description": "A POC for Meta-Pixel + Conversions API application",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "private": true,
+  "version": "0.0.0",
   "type": "module",
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "ts-node": "^10.9.2",
-    "typescript": "^5.4.5"
+  "homepage": "https://mauudev.github.io/meta_pixel_conversion_api",
+  "scripts": {
+    "dev": "vite",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview",
+    "predeploy": "tsc && vite build",
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
-    "@types/facebook-nodejs-business-sdk": "^18.0.0",
-    "facebook-nodejs-business-sdk": "^19.0.3"
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.66",
+    "@types/react-dom": "^18.2.22",
+    "@typescript-eslint/eslint-plugin": "^7.2.0",
+    "@typescript-eslint/parser": "^7.2.0",
+    "@vitejs/plugin-react-swc": "^3.5.0",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.6",
+    "gh-pages": "^6.1.1",
+    "typescript": "^5.2.2",
+    "vite": "^5.2.0"
   }
 }
