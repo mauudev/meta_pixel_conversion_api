@@ -5,19 +5,16 @@ import {
   useColorModeValue,
   Stack,
   useColorMode,
-  Show,
+  // Show,
   HStack,
-  // Text,
+  Text,
   useDisclosure,
   IconButton,
   // Hide,
 } from "@chakra-ui/react";
 // import { MoonIcon, SunIcon, HamburgerIcon, CloseIcon, AddIcon } from "@chakra-ui/icons";
 import { MoonIcon, SunIcon, HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
-import Photo from "./Photo";
-import Name from "./Name";
 import "./Navbar.css";
-import Shubham_Verma_Resume from "./Shubham_Verma_Resume.pdf";
 
 export default function Navbar() {
   const { colorMode, toggleColorMode } = useColorMode();
@@ -25,7 +22,6 @@ export default function Navbar() {
 
   const onButtonClick = () => {
     console.log("Button was clicked!");
-    window.open(Shubham_Verma_Resume);
   };
 
   return (
@@ -33,12 +29,13 @@ export default function Navbar() {
       <Box bg={useColorModeValue("gray.100", "gray.900")} px={9} width={["100%"]}>
         <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
           <HStack w="42%">
-            <Name />
-
-            <Show breakpoint="(min-width: 1000px)">
-              {" "}
-              <Photo />
-            </Show>
+            <Text
+              as="b"
+              fontSize={{ base: "18px", md: "24px", lg: "30px" }}
+              style={{ textShadow: "#FC0 1px 0 10px" }}
+            >
+              META PIXEL
+            </Text>
           </HStack>
 
           <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
@@ -162,8 +159,8 @@ export default function Navbar() {
                 size={["sm", "md"]}
                 id="resumeBtn"
               >
-                <a href={Shubham_Verma_Resume} target="_blank" download="Shubham_Verma_Resume">
-                  RESUME
+                <a href="#" target="_blank" download="#">
+                  Add to Cart
                 </a>
                 {/* <Link
                     id="navRes"
