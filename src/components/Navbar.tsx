@@ -5,14 +5,11 @@ import {
   useColorModeValue,
   Stack,
   useColorMode,
-  // Show,
   HStack,
   Text,
   useDisclosure,
   IconButton,
-  // Hide,
 } from "@chakra-ui/react";
-// import { MoonIcon, SunIcon, HamburgerIcon, CloseIcon, AddIcon } from "@chakra-ui/icons";
 import { MoonIcon, SunIcon, HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import "./Navbar.css";
 
@@ -24,6 +21,14 @@ export default function Navbar() {
     console.log("Button was clicked!");
   };
 
+  const navButtons = [
+    { text: "Home", href: "#Home" },
+    { text: "About", href: "#About" },
+    { text: "Skills", href: "#Skills" },
+    { text: "Projects", href: "#Projects" },
+    { text: "Contact", href: "#Contact" },
+  ];
+
   return (
     <div id="navFix">
       <Box bg={useColorModeValue("gray.100", "gray.900")} px={9} width={["100%"]}>
@@ -34,117 +39,23 @@ export default function Navbar() {
               fontSize={{ base: "18px", md: "24px", lg: "30px" }}
               style={{ textShadow: "#FC0 1px 0 10px" }}
             >
-              META PIXEL
+              IoT STORE
             </Text>
           </HStack>
 
           <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
-            {/* <IconButton
-              size={"md"}
-              icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
-              aria-label={"Open Menu"}
-              display={{ md: "none" }}
-              onClick={isOpen ? onClose : onOpen}
-            /> */}
             <HStack spacing={8} alignItems={"center"}>
               <HStack as={"nav"} spacing={4} display={{ base: "none", md: "flex" }} id="myDIV">
-                <Button className="btnRes">
-                  <a href="#Home">
-                    {" "}
-                    <b>Home</b>
-                  </a>
-                </Button>
-
-                <Button className="btnRes">
-                  <a href="#About">
-                    <b>About</b>
-                  </a>
-                </Button>
-
-                <Button className="btnRes">
-                  <a href="#Skills">
-                    {" "}
-                    <b>Skills</b>
-                  </a>
-                </Button>
-
-                <Button className="btnRes">
-                  <a href="#Projects">
-                    <b>Projects</b>
-                  </a>
-                </Button>
-
-                <Button className="btnRes">
-                  <a href="#Contact">
-                    <b>Contact</b>
-                  </a>
-                </Button>
+                {navButtons.map((button) => (
+                  <Button className="btnRes" key={button.text}>
+                    <a href={button.href}>
+                      <b>{button.text}</b>
+                    </a>
+                  </Button>
+                ))}
               </HStack>
             </HStack>
           </Flex>
-
-          {/* {isOpen ? (
-            <Box pb={4} display={{ md: "none" }}>
-              <Stack as={"nav"} spacing={4}>
-                <Button>
-                  <a href="#Home">
-                    {" "}
-                    <b>Home</b>
-                  </a>
-                </Button>
-                <Button>
-                  <a href="#Home">
-                    {" "}
-                    <b>Home</b>
-                  </a>
-                </Button>
-
-                <Button>
-                  <a href="#Home">
-                    {" "}
-                    <b>Home</b>
-                  </a>
-                </Button>
-                <Button>
-                  <a href="#Home">
-                    {" "}
-                    <b>Home</b>
-                  </a>
-                </Button>
-                <Button>
-                  <a href="#Home">
-                    {" "}
-                    <b>Home</b>
-                  </a>
-                </Button>
-
-                <Button>
-                  <a href="#About">
-                    <b>About</b>
-                  </a>
-                </Button>
-
-                <Button>
-                  <a href="#Skills">
-                    {" "}
-                    <b>Skills</b>
-                  </a>
-                </Button>
-
-                <Button>
-                  <a href="#Projects">
-                    <b>Projects</b>
-                  </a>
-                </Button>
-
-                <Button>
-                  <a href="#Contact">
-                    <b>Contact</b>
-                  </a>
-                </Button>
-              </Stack>
-            </Box>
-          ) : null} */}
 
           <Flex alignItems={"center"}>
             <Stack direction={"row"} spacing={7}>
@@ -162,15 +73,6 @@ export default function Navbar() {
                 <a href="#" target="_blank" download="#">
                   Add to Cart
                 </a>
-                {/* <Link
-                    id="navRes"
-                    href={Shubham_Verma_Resume}
-                    target="_blank"
-                    style={{ textDecoration: "none", color: "white" }}
-                    download="Shubham_Verma_Resume"
-                  >
-                    RESUME
-                  </Link> */}
               </Button>
             </Stack>
           </Flex>
@@ -184,116 +86,20 @@ export default function Navbar() {
           {isOpen ? (
             <Box pb={4} display={{ md: "none" }}>
               <Stack as={"nav"} spacing={4}>
-                <Button
-                  onClick={isOpen ? onClose : onOpen}
-                  _hover={{
-                    textShadow: "#FC0 1px 0 10px",
-                    transform: "scale(1.2)",
-                  }}
-                >
-                  <a href="#Home">
-                    {" "}
-                    <b>Home</b>
-                  </a>
-                </Button>
-                <Button
-                  onClick={isOpen ? onClose : onOpen}
-                  _hover={{
-                    textShadow: "#FC0 1px 0 10px",
-                    transform: "scale(1.2)",
-                  }}
-                >
-                  <a href="#Home">
-                    {" "}
-                    <b>Home</b>
-                  </a>
-                </Button>
-
-                <Button
-                  onClick={isOpen ? onClose : onOpen}
-                  _hover={{
-                    textShadow: "#FC0 1px 0 10px",
-                    transform: "scale(1.2)",
-                  }}
-                >
-                  <a href="#Home">
-                    {" "}
-                    <b>Home</b>
-                  </a>
-                </Button>
-                <Button
-                  onClick={isOpen ? onClose : onOpen}
-                  _hover={{
-                    textShadow: "#FC0 1px 0 10px",
-                    transform: "scale(1.2)",
-                  }}
-                >
-                  <a href="#Home">
-                    {" "}
-                    <b>Home</b>
-                  </a>
-                </Button>
-                <Button
-                  onClick={isOpen ? onClose : onOpen}
-                  _hover={{
-                    textShadow: "#FC0 1px 0 10px",
-                    transform: "scale(1.2)",
-                  }}
-                >
-                  <a href="#Home">
-                    {" "}
-                    <b>Home</b>
-                  </a>
-                </Button>
-
-                <Button
-                  onClick={isOpen ? onClose : onOpen}
-                  _hover={{
-                    textShadow: "#FC0 1px 0 10px",
-                    transform: "scale(1.2)",
-                  }}
-                >
-                  <a href="#About">
-                    <b>About</b>
-                  </a>
-                </Button>
-
-                <Button
-                  onClick={isOpen ? onClose : onOpen}
-                  _hover={{
-                    textShadow: "#FC0 1px 0 10px",
-                    transform: "scale(1.2)",
-                  }}
-                >
-                  <a href="#Skills">
-                    {" "}
-                    <b>Skills</b>
-                  </a>
-                </Button>
-
-                <Button
-                  onClick={isOpen ? onClose : onOpen}
-                  _hover={{
-                    textShadow: "#FC0 1px 0 10px",
-                    transform: "scale(1.2)",
-                  }}
-                >
-                  <a href="#Projects">
-                    <b>Projects</b>
-                  </a>
-                </Button>
-
-                <Button
-                  onClick={isOpen ? onClose : onOpen}
-                  _hover={{
-                    textShadow: "#FC0 1px 0 10px",
-                    transform: "scale(1.2)",
-                  }}
-                >
-                  <a href="#Contact">
-                    <b>Contact</b>
-                  </a>
-                </Button>
+                {navButtons.map((button) => (
+                  <Button
+                    onClick={isOpen ? onClose : onOpen}
+                    _hover={{
+                      textShadow: "#FC0 1px 0 10px",
+                      transform: "scale(1.2)",
+                    }}
+                    key={button.text}
+                  >
+                    <a href={button.href}>
+                      <b>{button.text}</b>
+                    </a>
+                  </Button>
+                ))}
               </Stack>
             </Box>
           ) : null}
