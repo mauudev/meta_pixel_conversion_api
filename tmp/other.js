@@ -13,6 +13,11 @@ const CustomData = _CustomData;
 const EventRequest = _EventRequest;
 const UserData = _UserData;
 const ServerEvent = _ServerEvent;
+import crypto from "crypto";
+
+const createHash = (data) => {
+  return crypto.createHash("sha256").update(data, "utf-8").digest("hex");
+};
 
 let current_timestamp = Math.floor(new Date() / 1000);
 const access_token =
@@ -36,21 +41,18 @@ const data = {
 };
 
 const userData_0 = new UserData()
-  .setEmails(["7b17fb0bd173f625b58636fb796407c22b3d16fc78302d79f0fd30c2fc2fc068"])
-  .setGender("M")
-  .setCountry("US")
-  .setPhones(["f660ab912ec121d1b1e928a0bb4bc61b15f5ad44d5efdc4e1c92a25e99b8e44a"]);
-
-const userData_1 = new UserData()
-  .setEmails(["7b17fb0bd173f625b58636fb796407c22b3d16fc78302d79f0fd30c2fc2fc068"])
-  .setGender("M")
-  .setCountry("US")
-  .setFirstName("JohnSalchichon")
-  .setPhones(["f660ab912ec121d1b1e928a0bb4bc61b15f5ad44d5efdc4e1c92a25e99b8e44a"]);
+  .setEmail(createHash("mtrigo143@gmail.com"))
+  .setGender(createHash("M"))
+  .setCountry(createHash("US"))
+  .setPhone(createHash("7956565656"))
+  .setClientIpAddress("4.4.4.4")
+  .setClientUserAgent("Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:93.0) Gecko/20100101 Firefox/93.0");
 
 const userData_2 = new UserData()
   .setEmails(["joe@eg.com"])
-  .setPhones(["12345678901", "14251234567"])
+  .setPhones(["f660ab912ec121d1b1e928a0bb4bc61b15f5ad44d5efdc4e1c92a25e99b8e44a"])
+  // set hashed gender
+  .setGender("M")
   // It is recommended to send Client IP and User Agent for Conversions API Events.
   .setClientIpAddress("4.4.4.4")
   .setClientUserAgent("Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:93.0) Gecko/20100101 Firefox/93.0")
@@ -59,16 +61,16 @@ const userData_2 = new UserData()
 
 const customData_0 = new CustomData().setValue(142.52).setCurrency("USD");
 const purchaseEvent1 = new ServerEvent()
-  .setEventName("Purchase")
+  .setEventName("Purchasee")
   .setEventTime(current_timestamp)
-  .setUserData(userData_2)
+  .setUserData(userData_0)
   // .setCustomData(customData_0)
   .setActionSource("website");
 
 const viewContentEvent = new ServerEvent()
   .setEventName("ViewContent")
   .setEventTime(current_timestamp)
-  .setUserData(userData_2)
+  .setUserData(userData_0)
   .setActionSource("website");
 
 const eventsData = [viewContentEvent];
