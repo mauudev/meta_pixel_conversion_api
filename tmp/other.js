@@ -61,7 +61,7 @@ const userData_2 = new UserData()
 
 const customData_0 = new CustomData().setValue(142.52).setCurrency("USD");
 const purchaseEvent1 = new ServerEvent()
-  .setEventName("Purchasee")
+  .setEventName("Luquito's Event 2")
   .setEventTime(current_timestamp)
   .setUserData(userData_0)
   // .setCustomData(customData_0)
@@ -73,10 +73,17 @@ const viewContentEvent = new ServerEvent()
   .setUserData(userData_0)
   .setActionSource("website");
 
-const eventsData = [viewContentEvent];
+const eventsData = [viewContentEvent, purchaseEvent1];
 
 // const eventRequest = new EventRequest(access_token, pixel_id, eventsData, "TEST63411");
-const eventRequest = new EventRequest(access_token, pixel_id, eventsData);
+const params = {
+  access_token: access_token,
+  pixel_id: pixel_id,
+  events: eventsData,
+  test_event_code: "TEST63411",
+};
+
+const eventRequest = new EventRequest(access_token, pixel_id, eventsData, undefined, "TEST63411");
 
 eventRequest.execute().then(
   (response) => {

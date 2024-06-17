@@ -11,21 +11,30 @@ import {
   IconButton,
 } from "@chakra-ui/react";
 import { MoonIcon, SunIcon, HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
+import ReactPixel from "react-facebook-pixel";
 import "./Navbar.css";
 
 export default function Navbar() {
   const { colorMode, toggleColorMode } = useColorMode();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+  ReactPixel.init("435714932594774");
+  ReactPixel.pageView();
+  ReactPixel.track("PageView");
+
   const onButtonClick = () => {
-    console.log("Button was clicked!");
+    ReactPixel.track("Purchase", {
+      value: 9.99,
+      currency: "USD",
+    });
+    console.log("Purchase was made!");
   };
 
   const navButtons = [
     { text: "Home", href: "#Home" },
     { text: "About", href: "#About" },
-    { text: "Skills", href: "#Skills" },
-    { text: "Projects", href: "#Projects" },
+    { text: "Listings", href: "#Listings" },
+    { text: "Partners", href: "#Partners" },
     { text: "Contact", href: "#Contact" },
   ];
 
@@ -39,7 +48,7 @@ export default function Navbar() {
               fontSize={{ base: "18px", md: "24px", lg: "30px" }}
               style={{ textShadow: "#FC0 1px 0 10px" }}
             >
-              IoT STORE
+              My GG Shop
             </Text>
           </HStack>
 
@@ -70,9 +79,7 @@ export default function Navbar() {
                 size={["sm", "md"]}
                 id="resumeBtn"
               >
-                <a href="#" target="_blank" download="#">
-                  Add to Cart
-                </a>
+                Purchase
               </Button>
             </Stack>
           </Flex>
