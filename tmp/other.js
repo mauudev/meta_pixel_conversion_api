@@ -7,23 +7,22 @@ import {
   ServerEvent as _ServerEvent,
   FacebookAdsApi,
 } from "facebook-nodejs-business-sdk";
+import crypto from "crypto";
+import { pixelId, metaAccessToken } from "./envvars.js";
 // const Content = _Content;
 const CustomData = _CustomData;
 // const DeliveryCategory = _DeliveryCategory;
 const EventRequest = _EventRequest;
 const UserData = _UserData;
 const ServerEvent = _ServerEvent;
-import crypto from "crypto";
 
 const createHash = (data) => {
   return crypto.createHash("sha256").update(data, "utf-8").digest("hex");
 };
 
 let current_timestamp = Math.floor(new Date() / 1000);
-const access_token =
-  "EAAGhTpVxZCKQBOzdSQeX6FZCZBt1ieOOAZBpurfwGFZA7L5MjHgZAwegmnZCHZC0AQ7X86pKYwLsooRbIRtg6wl4Aiu1CyQCHWRVEh0jPtmOIfeK753SdWEjVdvtBv5Iur20z8xNb9daubxOWh5tdeCaC5NVal6bpu0OukKnviI6nWl7kOP54bi070nGSpx5tMFmZBwZDZD";
-const pixel_id = "25810445075237872";
-const api = FacebookAdsApi.init(access_token);
+
+const api = FacebookAdsApi.init(metaAccessToken);
 const data = {
   data: [
     {
@@ -75,15 +74,18 @@ const viewContentEvent = new ServerEvent()
 
 const eventsData = [viewContentEvent, purchaseEvent1];
 
-// const eventRequest = new EventRequest(access_token, pixel_id, eventsData, "TEST63411");
+// const eventRequest = new EventRequest(metaAccessToken, pixelId, eventsData, "TEST63411");
 const params = {
-  access_token: access_token,
-  pixel_id: pixel_id,
+  metaAccessToken: metaAccessToken,
+  pixelId: pixelId,
   events: eventsData,
   test_event_code: "TEST63411",
 };
 
-const eventRequest = new EventRequest(access_token, pixel_id, eventsData, undefined, "TEST63411");
+const eventRequest = new EventRequest(metaAccessToken, pixelId, eventsData, undefined, "TEST63411");
+
+console.log(`META_ACCESS_TOKEN: ${metaAccessToken}`);
+console.log(`PIXEL_ID: ${pixelId}`);
 
 eventRequest.execute().then(
   (response) => {
