@@ -94,8 +94,7 @@ export abstract class BaseHandler {
   protected constructor(client: any) {
     this.client = client;
   }
-  abstract handle(event: BaseEvent): void;
-  abstract sayHello(): string;
+  abstract handle(event: BaseEvent): Promise<any>;
 }
 
 export interface BaseBus {

@@ -1,4 +1,4 @@
-import { EventRequest, ServerEvent, FacebookAdsApi } from "facebook-nodejs-business-sdk";
+import { EventRequest, ServerEvent, FacebookAdsApi, EventResponse } from "facebook-nodejs-business-sdk";
 import { MetaClientInitializationError } from "./Exceptions";
 
 export default class MetaConversionsClient {
@@ -15,7 +15,7 @@ export default class MetaConversionsClient {
     this._testEventCode = testEventCode;
   }
 
-  public static getInstance(
+  static getInstance(
     metaAccessToken: string,
     pixelId: string,
     testEventCode: string | undefined
@@ -29,7 +29,7 @@ export default class MetaConversionsClient {
     return MetaConversionsClient.instance;
   }
 
-  public init(): void {
+  init(): void {
     if (this._initialized) {
       return;
     }
@@ -37,7 +37,7 @@ export default class MetaConversionsClient {
     this._initialized = true;
   }
 
-  public sendEvent(eventData: ServerEvent | ServerEvent[]): void {
+  async sendEvent(eventData: ServerEvent | ServerEvent[]): Promise<EventResponse> {
     this.init();
     const eventsData = Array.isArray(eventData) ? eventData : [eventData];
     const eventRequest = new EventRequest(
@@ -47,13 +47,7 @@ export default class MetaConversionsClient {
       undefined,
       this._testEventCode
     );
-    eventRequest.execute().then(
-      (response: never) => {
-        console.log("Response: ", response);
-      },
-      (err: never) => {
-        console.error("Error: ", err);
-      }
-    );
+
+    return await eventRequest.execute();
   }
 }

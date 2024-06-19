@@ -7,18 +7,14 @@ export default class PurchaseEventHandler extends BaseHandler {
     super(client);
   }
 
-  public handle(event: PurchaseEvent): void {
+  async handle(event: PurchaseEvent): Promise<any> {
     try {
-      this.client.sendEvent(event.buildEvent());
+      return await this.client.sendEvent(event.buildEvent());
     } catch (error) {
       if (error instanceof Error) {
         throw new EventHandlerException(`Error handling purchase event: ${error.message}`);
       }
       throw new EventHandlerException("Unknown error");
     }
-  }
-
-  public sayHello(): string {
-    return "Hello";
   }
 }

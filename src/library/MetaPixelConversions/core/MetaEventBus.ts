@@ -32,7 +32,7 @@ export default class MetaEventBus implements BaseBus {
     this.handlerRegistry.set(eventName, handler);
   }
 
-  handle(event: BaseEvent): void {
+  async handle(event: BaseEvent): Promise<any> {
     if (!this.busInitialized) {
       throw new Error("MetaEventBusException: Bus not initialized");
     }
@@ -44,11 +44,8 @@ export default class MetaEventBus implements BaseBus {
     }
 
     const client = MetaConversionsClient.getInstance(META_ACCESS_TOKEN, PIXEL_ID, TEST_EVENT_CODE);
-
     const handler = new handlerClass(client);
-    console.log(handler.sayHello());
-
-    handler.handle(event);
+    return await handler.handle(event);
   }
 
   // addDependency(name: string, dependency: any): void {
