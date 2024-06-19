@@ -89,14 +89,17 @@ export abstract class BaseEvent {
 /**
  * Handler & Bus abstractions
  */
-export interface BaseHandler {
-  client: any;
-  handle(event: BaseEvent): void;
-  sayHello(): void;
+export abstract class BaseHandler {
+  protected client: any;
+  protected constructor(client: any) {
+    this.client = client;
+  }
+  abstract handle(event: BaseEvent): void;
+  abstract sayHello(): string;
 }
 
 export interface BaseBus {
-  register(eventName: string, handler: new () => BaseHandler): void;
+  register(eventName: string, handler: new (client: any) => BaseHandler): void;
   handle(event: BaseEvent): void;
 }
 
