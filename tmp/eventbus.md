@@ -1,20 +1,15 @@
 GitHub Copilot
 Para implementar el bus de eventos que describes, podrías seguir los siguientes pasos:
-
 Crear una clase EventBus que mantenga un registro de eventos y sus handlers correspondientes. Esta clase también debería tener una cola de eventos para procesar.
 
 En la clase EventBus, implementar un método register que tome un tipo de evento y un handler, y los agregue al registro.
-
 Implementar un método enqueue que tome un evento y lo agregue a la cola de eventos.
-
 Implementar un método process que procese los eventos en la cola uno por uno, llamando al handler correspondiente para cada evento.
 
 Crear clases específicas de eventos como PurchaseEvent que hereden de ServerEvent y tengan los parámetros requeridos para ese tipo de evento.
-
 Crear un hook de React que use el EventBus para encolar eventos.
-
 Aquí hay un esbozo de cómo podrían verse estas clases y funciones en TypeScript:
-
+3
 ````
 class EventBus {
   private eventHandlers: Map<string, (event: ServerEvent) => void> = new Map();
