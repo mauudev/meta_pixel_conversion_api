@@ -11,6 +11,7 @@ Set the environment variables in the .env file.
 ```sh
 META_ACCESS_TOKEN=<YOUR_ACCESS_TOKEN>
 PIXEL_ID=<YOUR_PIXEL_ID>
+TEST_EVENT_CODE=<TEST_EVENT_CODE> // Used for the meta pixel testing sandbox
 ```
 
 Install the dependencies and devDependencies and start the server.
