@@ -69,20 +69,35 @@ export interface CustomDataSchema {
 // - IP address is not selected
 
 export abstract class BaseEvent {
+  protected get getUserData(): UserDataSchema {
+    return this.userData;
+  }
+  protected set setUserData(value: UserDataSchema) {
+    this.userData = value;
+  }
+  protected get getCustomData(): CustomDataSchema {
+    return this.customData;
+  }
+  protected set setCustomData(value: CustomDataSchema) {
+    this.customData = value;
+  }
   protected constructor(protected userData: UserDataSchema, protected customData: CustomDataSchema) {}
   abstract buildEvent(): any;
+  abstract isValid(): boolean;
 }
 
 /**
  * Handler & Bus abstractions
  */
-export abstract class BaseHandler {
-  abstract handle(event: BaseEvent): void;
+export interface BaseHandler {
+  client: any;
+  handle(event: BaseEvent): void;
+  sayHello(): void;
 }
 
-export abstract class BaseBus {
-  abstract register(handler: BaseHandler, event: BaseEvent): void;
-  abstract handle(): void;
+export interface BaseBus {
+  register(eventName: string, handler: new () => BaseHandler): void;
+  handle(event: BaseEvent): void;
 }
 
 /**
