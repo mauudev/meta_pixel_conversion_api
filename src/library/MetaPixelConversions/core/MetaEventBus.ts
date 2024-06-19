@@ -8,9 +8,11 @@ config();
 const META_ACCESS_TOKEN = process.env.META_ACCESS_TOKEN;
 // eslint-disable-next-line no-undef
 const PIXEL_ID = process.env.PIXEL_ID;
+// eslint-disable-next-line no-undef
+const TEST_EVENT_CODE = process.env.TEST_EVENT_CODE;
 
 export default class MetaEventBus implements BaseBus {
-  private handlerRegistry: Map<string, new () => BaseHandler> = new Map();
+  private handlerRegistry: Map<string, new (client: any) => BaseHandler> = new Map();
 
   private busInitialized = false;
 
@@ -22,11 +24,11 @@ export default class MetaEventBus implements BaseBus {
     this.busInitialized = true;
   }
 
-  getHandlerRegistry(): Map<string, new () => BaseHandler> {
+  getHandlerRegistry(): Map<string, new (client: any) => BaseHandler> {
     return this.handlerRegistry;
   }
 
-  register(eventName: string, handler: new () => BaseHandler): void {
+  register(eventName: string, handler: new (client: any) => BaseHandler): void {
     this.handlerRegistry.set(eventName, handler);
   }
 
@@ -41,11 +43,12 @@ export default class MetaEventBus implements BaseBus {
       throw new Error(`No handler registered for event ${event.constructor.name}`);
     }
 
-    const handler = new handlerClass();
+    const client = MetaConversionsClient.getInstance(META_ACCESS_TOKEN, PIXEL_ID, TEST_EVENT_CODE);
+
+    const handler = new handlerClass(client);
     console.log(handler.sayHello());
 
-    // const handler = new handlerClass();
-    // handler.handle(event);
+    handler.handle(event);
   }
 
   // addDependency(name: string, dependency: any): void {

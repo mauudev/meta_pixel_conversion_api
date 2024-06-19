@@ -2,8 +2,10 @@ import { BaseHandler } from "../core/Abstractions";
 import PurchaseEvent from "../StandardEvents/PurchaseEvent";
 import { EventHandlerException } from "../core/Exceptions";
 
-export default class PurchaseEventHandler implements BaseHandler {
-  client: any;
+export default class PurchaseEventHandler extends BaseHandler {
+  constructor(client: any) {
+    super(client);
+  }
 
   public handle(event: PurchaseEvent): void {
     try {
