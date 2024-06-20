@@ -37,6 +37,7 @@ If the sending process fails after a few retries, the event is marked as `not_de
 
 An admin panel is created to manage the events that are being to sent to MetaConversions API.
 The admin panel will have the following features:
+
 - The list of all Standard/Custom Events that are being sent to MetaConversions API
 - Enable/Disable the sending of specific events
 - Configurations settings to manage the sending process
@@ -55,3 +56,8 @@ When a event is sent to MetaConversions API, it is marked as `delivered` in the 
 A worker is created to handle the sending of events to MetaConversions API.
 This worker is responsible for sending events that are stored in the database and have not been delivered.
 The worker runs in the background and checks for events that are not delivered and retries sending them.
+
+# Events creation
+
+- Pageview: Looks like managed only by the pixel
+- ViewCategory: Lookssadas as

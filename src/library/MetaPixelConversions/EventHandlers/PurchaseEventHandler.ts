@@ -12,7 +12,7 @@ export default class PurchaseEventHandler extends BaseHandler {
       return await this.client.sendEvent(event.buildEvent());
     } catch (error) {
       if (error instanceof Error) {
-        throw new EventHandlerException(`Error handling purchase event: ${error.message}`);
+        throw new EventHandlerException(`Error handling Purchase event: ${error.message}`);
       }
       throw new EventHandlerException("Unknown error");
     }

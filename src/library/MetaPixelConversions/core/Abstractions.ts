@@ -68,7 +68,14 @@ export interface CustomDataSchema {
 // - Email address is not selected
 // - IP address is not selected
 
+export enum EventType {
+  Standard = "standard",
+  Custom = "custom",
+}
+
 export abstract class BaseEvent {
+  public eventType: EventType = EventType.Standard;
+
   protected get getUserData(): UserDataSchema {
     return this.userData;
   }
@@ -81,7 +88,7 @@ export abstract class BaseEvent {
   protected set setCustomData(value: CustomDataSchema) {
     this.customData = value;
   }
-  protected constructor(protected userData: UserDataSchema, protected customData: CustomDataSchema) {}
+  protected constructor(protected userData?: UserDataSchema, protected customData?: CustomDataSchema) {}
   abstract buildEvent(): any;
   abstract isValid(): boolean;
 }

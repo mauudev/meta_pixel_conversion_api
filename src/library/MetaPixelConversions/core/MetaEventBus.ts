@@ -47,12 +47,4 @@ export default class MetaEventBus implements BaseBus {
     const handler = new handlerClass(client);
     return await handler.handle(event);
   }
-
-  // addDependency(name: string, dependency: any): void {
-  //   this.dependencies[name] = dependency;
-  // }
-
-  // injectDependencies(): void {
-  //   // Inject dependencies to handlers
-  // }
 }
