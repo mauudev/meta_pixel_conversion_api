@@ -14,17 +14,13 @@ const EventRequest = _EventRequest;
 const UserData = _UserData;
 const ServerEvent = _ServerEvent;
 
-const META_ACCESS_TOKEN = "<META_ACCESS_TOKEN>";
-const PIXEL_ID = "<PIXEL_ID>";
-const TEST_EVENT_CODE = "<TEST_EVENT_CODE>";
-
 const createHash = (data: string): string => {
   return crypto.createHash("sha256").update(data, "utf-8").digest("hex");
 };
 
 let current_timestamp: number = Math.floor(new Date().getTime() / 1000);
 
-const api = FacebookAdsApi.init(META_ACCESS_TOKEN);
+const api = FacebookAdsApi.init(META_ACCESS_TOKEN || "");
 
 const userData_0 = new UserData()
   .setEmail(createHash("mtrigo143@gmail.com"))
@@ -48,9 +44,34 @@ const viewContentEvent = new ServerEvent()
   .setUserData(userData_0)
   .setActionSource("website");
 
-const eventsData = [viewContentEvent, purchaseEvent1];
+const userSelectedBrand = "Apple";
+const userSelectedModel = "iPhone 12";
+const userSelectedProductType = "Smartphone";
+const userSelectedType = "Electronics";
 
-const eventRequest = new EventRequest(META_ACCESS_TOKEN, PIXEL_ID, eventsData, undefined, TEST_EVENT_CODE);
+const customData = new CustomData();
+customData.setCustomProperties({ brand: userSelectedBrand });
+customData.setCustomProperties({ model: userSelectedModel });
+customData.setCustomProperties({ product_type: userSelectedProductType });
+customData.setCustomProperties({ type: userSelectedType });
+
+const ViewCategoryEvent = new ServerEvent()
+  .setEventName("ViewCategory")
+  .setEventTime(current_timestamp)
+  .setUserData(userData_0)
+  .setCustomData(customData)
+  .setActionSource("website");
+
+// const eventsData = [viewContentEvent, purchaseEvent1];
+const eventsData = [ViewCategoryEvent];
+
+const eventRequest = new EventRequest(
+  META_ACCESS_TOKEN || "",
+  PIXEL_ID || "",
+  eventsData,
+  undefined,
+  TEST_EVENT_CODE
+);
 
 eventRequest.execute().then(
   (response: any) => {
