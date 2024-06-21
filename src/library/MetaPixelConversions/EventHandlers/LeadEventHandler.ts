@@ -1,13 +1,13 @@
 import { BaseHandler } from "../core/Abstractions";
-import { PurchaseEvent } from "../StandardEvents";
+import { InitiateCheckoutEvent } from "../StandardEvents";
 import { EventHandlerException } from "../core/Exceptions";
 
-export default class PurchaseEventHandler extends BaseHandler {
+export default class InitiateCheckoutEventHandler extends BaseHandler {
   constructor(client: any) {
     super(client);
   }
 
-  async handle(event: PurchaseEvent): Promise<any> {
+  async handle(event: InitiateCheckoutEvent): Promise<any> {
     try {
       return await this.client.sendEvent(event.buildEvent());
     } catch (error) {
