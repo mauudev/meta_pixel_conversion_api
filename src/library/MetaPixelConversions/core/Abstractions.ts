@@ -1,3 +1,6 @@
+import { CustomData, UserData, ServerEvent } from "facebook-nodejs-business-sdk";
+import { v4 as uuid } from "uuid";
+
 /**
  * Standard Events
  */
@@ -44,6 +47,7 @@ export interface UserDataSchema {
 }
 
 export interface CustomDataSchema {
+  [key: string]: any;
   value?: number;
   currency?: string;
   content_name?: string;
@@ -61,6 +65,18 @@ export interface CustomDataSchema {
   custom_properties?: Record<any, any>;
 }
 
+export enum EventName {
+  PageView = "PageView",
+  ViewCategory = "ViewCategory",
+  ViewContent = "ViewContent",
+  AddToCart = "AddToCart",
+  InitiateCheckout = "InitiateCheckout",
+  Purchase = "Purchase",
+  CompleteRegistration = "CompleteRegistration",
+  Lead = "Lead",
+  Contact = "Contact",
+  AbandonedCheckout = "AbandonedCheckout",
+}
 // Parameters to improve the rate of deduplication:
 // - Event ID is not selected
 // Parameters to improve event matching:
@@ -68,29 +84,48 @@ export interface CustomDataSchema {
 // - Email address is not selected
 // - IP address is not selected
 
-export enum EventType {
-  Standard = "standard",
-  Custom = "custom",
+export abstract class BaseEvent {
+  protected eventName: string;
+  protected constructor(protected userData: UserDataSchema, protected customData: CustomDataSchema) {}
+
+  abstract validate(): void;
+  abstract composeUserData(): UserData;
+  abstract composeCustomData(): CustomData;
+
+  buildEvent(): ServerEvent {
+    this.validate();
+    return new ServerEvent()
+      .setEventId(uuid())
+      .setEventName(this.eventName)
+      .setEventTime(Math.floor(new Date().getTime() / 1000))
+      .setUserData(this.composeUserData())
+      .setCustomData(this.composeCustomData())
+      .setActionSource("website");
+  }
 }
 
-export abstract class BaseEvent {
-  public eventType: EventType = EventType.Standard;
+export abstract class MetaStandardEvent extends BaseEvent {
+  composeUserData(): UserData {
+    return Object.assign(new UserData(), this.userData);
+  }
 
-  protected get getUserData(): UserDataSchema {
-    return this.userData;
+  composeCustomData(): CustomData {
+    return Object.assign(new CustomData(), this.customData);
   }
-  protected set setUserData(value: UserDataSchema) {
-    this.userData = value;
+}
+
+export abstract class MetaCustomEvent extends BaseEvent {
+  composeUserData(): UserData {
+    return Object.assign(new UserData(), this.userData);
   }
-  protected get getCustomData(): CustomDataSchema {
-    return this.customData;
+
+  composeCustomData(): CustomData {
+    const customData = new CustomData();
+    for (const key in this.customData) {
+      customData.setCustomProperties({ [key]: this.customData[key] });
+    }
+    return customData;
   }
-  protected set setCustomData(value: CustomDataSchema) {
-    this.customData = value;
-  }
-  protected constructor(protected userData?: UserDataSchema, protected customData?: CustomDataSchema) {}
-  abstract buildEvent(): any;
-  abstract isValid(): boolean;
 }
 
 /**
