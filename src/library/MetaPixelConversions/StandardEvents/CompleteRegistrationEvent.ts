@@ -2,21 +2,22 @@ import { UserDataSchema, CustomDataSchema, MetaStandardEvent, EventName } from "
 import { EventValidationError } from "../core/Exceptions";
 import Joi from "joi";
 
-const purchaseEventSchema = Joi.object({
+const completeRegistrationEventSchema = Joi.object({
+  content_name: Joi.string().valid("Pakkepost").required(),
+  currency: Joi.string().valid("DKK").required(),
   value: Joi.number().required(),
-  currency: Joi.string().required(),
-  num_items: Joi.number().required(),
+  status: Joi.boolean().valid(true).required(),
 });
 
-export class PurchaseEvent extends MetaStandardEvent {
-  eventName = EventName.Purchase;
+export class CompleteRegistrationEvent extends MetaStandardEvent {
+  eventName = EventName.CompleteRegistration;
 
   constructor(userData: UserDataSchema, customData: CustomDataSchema) {
     super(userData, customData);
   }
 
   validate(): void {
-    const isValid = purchaseEventSchema.validate(this.customData).error === undefined;
+    const isValid = completeRegistrationEventSchema.validate(this.customData).error === undefined;
     if (!isValid) {
       throw new EventValidationError(
         `Error creating '${this.eventName}' event: Invalid data, provide the required parameters.`
