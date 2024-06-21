@@ -51,20 +51,8 @@ export class EventException extends BaseException {
   }
 }
 
-export class EventCreationError extends EventException {
+export class EventValidationError extends EventException {
   constructor(message?: string) {
-    super(message || "EventCreationError");
-  }
-}
-
-/**
- * Standard event exceptions
- *
- * PurchaseEvent exceptions
- */
-
-export class InvalidPurchaseEventData extends EventException {
-  constructor(message?: string) {
-    super(message || "InvalidPurchaseEventData");
+    super(message || "EventValidationError");
   }
 }
