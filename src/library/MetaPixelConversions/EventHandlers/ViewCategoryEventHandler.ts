@@ -1,8 +1,8 @@
-import { AbandonedCheckoutEvent } from '../CustomEvents'
 import { MetaConversionsClient, EventHandlerException } from '../core'
+import { ViewCategoryEvent } from '../CustomEvents'
 
-export const abandonedCheckoutEventHandler = async (
-	event: AbandonedCheckoutEvent,
+export const viewCategoryEventHandler = async (
+	event: ViewCategoryEvent,
 	metaSdkClient: MetaConversionsClient
 ): Promise<any> => {
 	try {
