@@ -2,19 +2,23 @@
  * BaseExceptions
  */
 export class BaseException extends Error {
-  constructor(message?: string) {
-    super(message);
-    Object.setPrototypeOf(this, new.target.prototype);
-  }
+	errorData: any
+
+	constructor(message?: string, errorData?: any) {
+		super(message)
+		Object.setPrototypeOf(this, new.target.prototype)
+		this.errorData = errorData
+	}
 }
 
 /**
  * Bus exceptions
  */
 export class MetaEventBusException extends BaseException {
-  constructor(message?: string) {
-    super(message || "MetaEventBusException");
-  }
+	constructor(message?: string, errorData?: any) {
+		super(message || 'MetaEventBusException')
+		this.errorData = errorData
+	}
 }
 
 /**
@@ -22,37 +26,56 @@ export class MetaEventBusException extends BaseException {
  */
 
 export class EventHandlerException extends BaseException {
-  constructor(message?: string) {
-    super(message || "EventHandlerException");
-  }
+	constructor(message?: string, errorData?: any) {
+		super(message || 'EventHandlerException')
+		this.errorData = errorData
+	}
+}
+
+export class EventHandlerInitializationError extends EventHandlerException {
+	constructor(message?: string, errorData?: any) {
+		super(message || 'EventHandlerInitializationError')
+		this.errorData = errorData
+	}
+}
+
+export class EventReceiptError extends EventHandlerException {
+	constructor(message?: string, errorData?: any) {
+		super(message || 'EventReceiptError')
+		this.errorData = errorData
+	}
 }
 
 /**
  * MetaClient exceptions
  */
 export class MetaClientException extends BaseException {
-  constructor(message?: string) {
-    super(message || "MetaClientException");
-  }
+	constructor(message?: string, errorData?: any) {
+		super(message || 'MetaClientException')
+		this.errorData = errorData
+	}
 }
 
 export class MetaClientInitializationError extends MetaClientException {
-  constructor(message?: string) {
-    super(message || "MetaClientInitializationError");
-  }
+	constructor(message?: string, errorData?: any) {
+		super(message || 'MetaClientInitializationError')
+		this.errorData = errorData
+	}
 }
 
 /**
  * Event exceptions
  */
 export class EventException extends BaseException {
-  constructor(message?: string) {
-    super(message || "EventException");
-  }
+	constructor(message?: string, errorData?: any) {
+		super(message || 'EventException')
+		this.errorData = errorData
+	}
 }
 
 export class EventValidationError extends EventException {
-  constructor(message?: string) {
-    super(message || "EventValidationError");
-  }
+	constructor(message?: string, errorData?: any) {
+		super(message || 'EventValidationError')
+		this.errorData = errorData
+	}
 }

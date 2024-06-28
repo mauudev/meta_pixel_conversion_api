@@ -1,2 +1,2 @@
-export * from "./ViewCategoryEvent";
-export * from "./AbandonedCheckoutEvent";
+export * from './ViewCategoryEvent'
+export * from './AbandonedCheckoutEvent'

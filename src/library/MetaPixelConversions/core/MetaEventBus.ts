@@ -1,50 +1,95 @@
-import { BaseBus, BaseHandler, BaseEvent } from "./Abstractions";
-import MetaConversionsClient from "./MetaClient";
-import { config } from "dotenv-esm";
+import { BaseBus, BaseEvent, ErrorHandler, EventHandler } from './Abstractions'
+import { BaseException, EventHandlerException, MetaEventBusException, EventReceiptError } from './Exceptions'
+import { MetaConversionsClient } from './MetaClient'
 
-config();
+export class MetaEventBus extends BaseBus {
+	private errorHandlerRegistry: Map<string, ErrorHandler<BaseEvent, BaseException>> = new Map()
+	private handlerRegistry: Map<string, EventHandler<BaseEvent>> = new Map()
+	private metaSdkClient: MetaConversionsClient | undefined
+	private busInitialized = false
 
-// eslint-disable-next-line no-undef
-const META_ACCESS_TOKEN = process.env.META_ACCESS_TOKEN;
-// eslint-disable-next-line no-undef
-const PIXEL_ID = process.env.PIXEL_ID;
-// eslint-disable-next-line no-undef
-const TEST_EVENT_CODE = process.env.TEST_EVENT_CODE;
+	constructor(metaPixelAccessToken: string, pixelId: string, testEventCode?: string) {
+		super(metaPixelAccessToken, pixelId, testEventCode)
+	}
 
-export default class MetaEventBus implements BaseBus {
-  private handlerRegistry: Map<string, new (client: any) => BaseHandler> = new Map();
+	initialize(): void {
+		if (!this.metaPixelAccessToken || !this.pixelId) {
+			throw new MetaEventBusException('Missing required environment variables')
+		}
 
-  private busInitialized = false;
+		try {
+			this.metaSdkClient = MetaConversionsClient.getInstance(
+				this.metaPixelAccessToken,
+				this.pixelId,
+				this.testEventCode
+			)
+		} catch (error) {
+			throw new MetaEventBusException(`Error initializing Meta SDK client: ${(error as Error).message}`)
+		}
 
-  initialize(): void {
-    if (!META_ACCESS_TOKEN || !PIXEL_ID) {
-      throw new Error("MetaEventBusException: Missing required environment variables");
-    }
+		this.busInitialized = true
+	}
 
-    this.busInitialized = true;
-  }
+	getHandlerRegistry<T extends BaseEvent>(): Map<string, EventHandler<T>> {
+		return this.handlerRegistry
+	}
 
-  getHandlerRegistry(): Map<string, new (client: any) => BaseHandler> {
-    return this.handlerRegistry;
-  }
+	getErrorHandlerRegistry<T extends BaseEvent, K extends BaseException>(): Map<string, ErrorHandler<T, K>> {
+		return this.errorHandlerRegistry
+	}
 
-  register(eventName: string, handler: new (client: any) => BaseHandler): void {
-    this.handlerRegistry.set(eventName, handler);
-  }
+	register<T extends BaseEvent>(eventClass: typeof BaseEvent, handler: EventHandler<T>): void {
+		const eventName = eventClass.name
+		if (!eventName || eventName.trim() === '') {
+			throw new MetaEventBusException('Unable to register event, provide a valid event class')
+		}
+		this.handlerRegistry.set(eventName, handler as EventHandler<BaseEvent>)
+	}
 
-  async handle(event: BaseEvent): Promise<any> {
-    if (!this.busInitialized) {
-      throw new Error("MetaEventBusException: Bus not initialized");
-    }
+	registerErrorHandler<T extends BaseEvent, K extends BaseException>(
+		errorClass: new () => K,
+		errHandler: ErrorHandler<T, K>
+	): void {
+		const exceptionName = errorClass.name
+		if (!exceptionName || exceptionName.trim() === '') {
+			throw new MetaEventBusException('Unable to register error handler, provide a valid exception class')
+		}
+		this.errorHandlerRegistry.set(exceptionName, errHandler as ErrorHandler<BaseEvent, BaseException>)
+	}
 
-    const handlerClass = this.handlerRegistry.get(event.constructor.name);
+	async handle(event: BaseEvent): Promise<any> {
+		if (!this.busInitialized) {
+			throw new MetaEventBusException('Bus not initialized')
+		}
 
-    if (!handlerClass) {
-      throw new Error(`No handler registered for event ${event.constructor.name}`);
-    }
+		const handlerFn = this.handlerRegistry.get(event.constructor.name)
+		if (!handlerFn) {
+			throw new Error(`No handler registered for event ${event.constructor.name}`)
+		}
 
-    const client = MetaConversionsClient.getInstance(META_ACCESS_TOKEN, PIXEL_ID, TEST_EVENT_CODE);
-    const handler = new handlerClass(client);
-    return await handler.handle(event);
-  }
+		try {
+			return await handlerFn(event, this.metaSdkClient)
+		} catch (error) {
+			this.handleErrors(error as BaseException)
+		}
+	}
+
+	handleErrors(error: BaseException): void {
+		if (error instanceof EventHandlerException) {
+			console.log('Handling EventHandlerException ......', error.errorData)
+			console.log('finished handling error ......')
+		}
+		if (error instanceof MetaEventBusException) {
+			console.log('Handling MetaEventBusException ......', error.errorData)
+			console.log('finished handling error ......')
+		}
+		if (error instanceof EventReceiptError) {
+			console.log('Handling EventReceiptError ......', error.errorData)
+			console.log('finished handling error ......')
+		}
+		if (error instanceof BaseException) {
+			console.log('Handling BaseException ......', error.errorData)
+			console.log('finished handling error ......')
+		}
+	}
 }

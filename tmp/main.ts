@@ -14,6 +14,11 @@ const EventRequest = _EventRequest;
 const UserData = _UserData;
 const ServerEvent = _ServerEvent;
 
+const META_ACCESS_TOKEN =
+  "EAAGhTpVxZCKQBO0IrK8ZBQ6BxyvpLTKfxqmw2xsVIZCxC1swUnISkgYfHCkk03i1UaUd4Xa85EHH59ph3vjnRJmSqFnG5RZC7ZBJZBZBl6AyWI8zSWQPfZBi91sJZBdXLa0ZAcJwdjwjZBKrJ8LnFMkTAebBP7OnCcMz8SLSolpHZCcllfXTXAxWmMxZBRhuSuOfPrVqlmwZDZD";
+const PIXEL_ID = "435714932594774";
+const TEST_EVENT_CODE = "TEST75356";
+
 const createHash = (data: string): string => {
   return crypto.createHash("sha256").update(data, "utf-8").digest("hex");
 };
