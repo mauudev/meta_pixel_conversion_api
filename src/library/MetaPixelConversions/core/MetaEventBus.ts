@@ -45,7 +45,7 @@ export class MetaEventBus extends BaseBus {
     } catch (error) {
       throw new MetaEventBusException(`Error initializing Meta SDK client: ${(error as Error).message}`);
     }
-
+    console.log(`bus initialized: ${JSON.stringify(this.metaSdkClient, null, 2)}`);
     this.busInitialized = true;
   }
 
@@ -58,6 +58,7 @@ export class MetaEventBus extends BaseBus {
   }
 
   register<T extends BaseEvent>(eventClass: typeof BaseEvent, handler: EventHandler<T>): void {
+    console.log("Registering event: ", eventClass.name);
     const eventName = eventClass.name;
     if (!eventName || eventName.trim() === "") {
       throw new MetaEventBusException("Unable to register event, provide a valid event class");
@@ -77,6 +78,7 @@ export class MetaEventBus extends BaseBus {
   }
 
   async handle(event: MetaStandardEvent | MetaCustomEvent): Promise<any> {
+    console.log("Handling event: ", event.constructor.name);
     return this.taskQueue.enqueue(() => this.processEvent(event));
   }
 
@@ -84,13 +86,13 @@ export class MetaEventBus extends BaseBus {
     if (!this.busInitialized) {
       throw new MetaEventBusException("Bus not initialized");
     }
-
     const handlerFn = this.handlerRegistry.get(event.constructor.name);
     if (!handlerFn) {
       throw new MetaEventBusException(`No handler registered for event ${event.constructor.name}`);
     }
 
     try {
+      console.log("---> Processing event: ", event.constructor.name);
       return await handlerFn(event, this.metaSdkClient);
     } catch (error) {
       return this.handleErrors(event, handlerFn, error);
