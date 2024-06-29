@@ -56,6 +56,27 @@ export class MetaClientException extends BaseException {
   }
 }
 
+export class MetaServerError extends MetaClientException {
+  constructor(message?: string, errorData?: any) {
+    super(message || "MetaServerError");
+    this.errorData = errorData;
+  }
+}
+
+export class MetaRequestLimitError extends MetaClientException {
+  constructor(message?: string, errorData?: any) {
+    super(message || "MetaRequestLimitError");
+    this.errorData = errorData;
+  }
+}
+
+export class MetaRequestError extends MetaClientException {
+  constructor(message?: string, errorData?: any) {
+    super(message || "MetaRequestError");
+    this.errorData = errorData;
+  }
+}
+
 export class MetaClientInitializationError extends MetaClientException {
   constructor(message?: string, errorData?: any) {
     super(message || "MetaClientInitializationError");
@@ -76,6 +97,13 @@ export class EventException extends BaseException {
 export class EventValidationError extends EventException {
   constructor(message?: string, errorData?: any) {
     super(message || "EventValidationError");
+    this.errorData = errorData;
+  }
+}
+
+export class EventSentError extends EventException {
+  constructor(message?: string, errorData?: any) {
+    super(message || "EventSentError");
     this.errorData = errorData;
   }
 }
