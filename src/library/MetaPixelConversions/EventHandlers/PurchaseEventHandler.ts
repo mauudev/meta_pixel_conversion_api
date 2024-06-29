@@ -9,6 +9,7 @@ export const purchaseEventHandler = async (
   try {
     console.log("Sending purchase event...");
     const response = await metaSdkClient.sendEvent(event.buildEvent());
+    console.log(`--> result: ${JSON.stringify(response)}`);
     return response;
   } catch (error) {
     if (error.response && error.response.code) {

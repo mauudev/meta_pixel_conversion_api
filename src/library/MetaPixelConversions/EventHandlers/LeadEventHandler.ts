@@ -1,10 +1,19 @@
-import { LeadEvent } from '../StandardEvents'
-import { MetaConversionsClient, EventHandlerException } from '../core'
+import { LeadEvent } from "../StandardEvents";
+import { MetaConversionsClient } from "../core";
+import { mapToException } from "../utils";
 
-export const leadEventHandler = async (event: LeadEvent, metaSdkClient: MetaConversionsClient): Promise<any> => {
-	try {
-		return await metaSdkClient.sendEvent(event.buildEvent())
-	} catch (error) {
-		throw new EventHandlerException(`Error handling event '${event.eventName}': ${(error as Error).message}`)
-	}
-}
+export const leadEventHandler = async (
+  event: LeadEvent,
+  metaSdkClient: MetaConversionsClient
+): Promise<any> => {
+  try {
+    console.log("Sending LeadEvent event...");
+    const response = await metaSdkClient.sendEvent(event.buildEvent());
+    console.log(`--> result: ${JSON.stringify(response)}`);
+    return response;
+  } catch (error) {
+    if (error.response && error.response.code) {
+      mapToException(error);
+    }
+  }
+};

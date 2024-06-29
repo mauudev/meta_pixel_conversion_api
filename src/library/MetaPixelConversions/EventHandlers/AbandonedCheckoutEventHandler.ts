@@ -1,13 +1,19 @@
-import { AbandonedCheckoutEvent } from '../CustomEvents'
-import { MetaConversionsClient, EventHandlerException } from '../core'
+import { AbandonedCheckoutEvent } from "../CustomEvents";
+import { MetaConversionsClient } from "../core";
+import { mapToException } from "../utils";
 
 export const abandonedCheckoutEventHandler = async (
-	event: AbandonedCheckoutEvent,
-	metaSdkClient: MetaConversionsClient
+  event: AbandonedCheckoutEvent,
+  metaSdkClient: MetaConversionsClient
 ): Promise<any> => {
-	try {
-		return await metaSdkClient.sendEvent(event.buildEvent())
-	} catch (error) {
-		throw new EventHandlerException(`Error handling event '${event.eventName}': ${(error as Error).message}`)
-	}
-}
+  try {
+    console.log("Sending AbandonedCheckoutEvent event...");
+    const response = await metaSdkClient.sendEvent(event.buildEvent());
+    console.log(`--> result: ${JSON.stringify(response)}`);
+    return response;
+  } catch (error) {
+    if (error.response && error.response.code) {
+      mapToException(error);
+    }
+  }
+};

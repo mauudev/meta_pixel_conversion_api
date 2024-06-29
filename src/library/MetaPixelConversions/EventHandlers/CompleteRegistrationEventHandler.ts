@@ -1,13 +1,19 @@
-import { CompleteRegistrationEvent } from '../StandardEvents'
-import { MetaConversionsClient, EventHandlerException } from '../core'
+import { CompleteRegistrationEvent } from "../StandardEvents";
+import { MetaConversionsClient } from "../core";
+import { mapToException } from "../utils";
 
 export const completeRegistrationEventHandler = async (
-	event: CompleteRegistrationEvent,
-	metaSdkClient: MetaConversionsClient
+  event: CompleteRegistrationEvent,
+  metaSdkClient: MetaConversionsClient
 ): Promise<any> => {
-	try {
-		return await metaSdkClient.sendEvent(event.buildEvent())
-	} catch (error) {
-		throw new EventHandlerException(`Error handling event '${event.eventName}': ${(error as Error).message}`)
-	}
-}
+  try {
+    console.log("Sending CompleteRegistrationEvent event...");
+    const response = await metaSdkClient.sendEvent(event.buildEvent());
+    console.log(`--> result: ${JSON.stringify(response)}`);
+    return response;
+  } catch (error) {
+    if (error.response && error.response.code) {
+      mapToException(error);
+    }
+  }
+};
