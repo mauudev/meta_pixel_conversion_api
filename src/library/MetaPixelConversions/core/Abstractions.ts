@@ -153,6 +153,10 @@ export abstract class BaseBus {
     errorClass: new () => K,
     errHandler: ErrorHandler<T, K>
   ): void;
-  abstract handle(event: BaseEvent): Promise<any>;
-  abstract handleErrors(error: BaseException): void;
+  abstract handle<T extends BaseEvent>(event: T): Promise<any>;
+  abstract handleErrors<T extends BaseEvent, K extends BaseException>(
+    event: T,
+    errHandler: ErrorHandler<T, K>,
+    error: BaseException
+  ): void;
 }
