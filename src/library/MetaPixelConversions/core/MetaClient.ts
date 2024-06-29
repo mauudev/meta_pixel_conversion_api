@@ -32,12 +32,28 @@ export class MetaConversionsClient {
     if (this._initialized) {
       return;
     }
-    try {
-      this._api = FacebookAdsApi.init(this._metaAccessToken);
-      this._initialized = true;
-    } catch (error) {
-      throw new MetaClientInitializationError(`Initialization failed: ${(error as Error).message}`);
-    }
+    const maxRetries = 3;
+    let attempts = 0;
+    const retryDelay = 1000;
+
+    const initialize = () => {
+      try {
+        this._api = FacebookAdsApi.init(this._metaAccessToken);
+        this._initialized = true;
+      } catch (error) {
+        if (attempts < maxRetries) {
+          attempts++;
+          console.log(`Initialization failed, retrying... Attempt ${attempts}`);
+          setTimeout(initialize, retryDelay);
+        } else {
+          throw new MetaClientInitializationError(
+            `Initialization failed after ${maxRetries} attempts: ${(error as Error).message}`
+          );
+        }
+      }
+    };
+
+    initialize();
   }
 
   async sendEvent(eventData: ServerEvent | ServerEvent[]): Promise<EventResponse> {
