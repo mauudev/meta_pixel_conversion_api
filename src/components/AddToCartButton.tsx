@@ -1,12 +1,12 @@
 import { useSendMetaEvent } from "../hooks";
 
 export const AddToCartButton = ({ product }) => {
-  const { sendEvents, isLoading, error } = useSendMetaEvent();
+  const { sendEvent, isLoading, error } = useSendMetaEvent();
 
   const handleAddToCart = () => {
     const userData = {
-      email: "user@example.com",
-      phone: "1234567890",
+      emails: ["mtrigo1434@gmail.com"],
+      phones: ["123456789"],
     };
 
     const customData = {
@@ -20,7 +20,7 @@ export const AddToCartButton = ({ product }) => {
       customData,
     };
 
-    sendEvents([eventData]);
+    sendEvent("ADD_TO_CART", eventData);
   };
 
   return (
