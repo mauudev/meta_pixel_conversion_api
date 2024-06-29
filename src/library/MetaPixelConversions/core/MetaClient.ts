@@ -1,9 +1,9 @@
-import { EventRequest, ServerEvent, FacebookAdsApi, EventResponse } from "facebook-nodejs-business-sdk";
+import { EventRequest, ServerEvent, EventResponse } from "facebook-nodejs-business-sdk";
 import { MetaClientInitializationError } from "./Exceptions";
 
 export class MetaConversionsClient {
   private static instance: MetaConversionsClient;
-  private _api: FacebookAdsApi | undefined;
+  // private _api: FacebookAdsApi; // if we want to interact with Graph API
   private _metaAccessToken: string;
   private _pixelId: string;
   private _testEventCode: string | undefined;
@@ -38,7 +38,6 @@ export class MetaConversionsClient {
 
     const initialize = () => {
       try {
-        this._api = FacebookAdsApi.init(this._metaAccessToken);
         this._initialized = true;
       } catch (error) {
         if (attempts < maxRetries) {
