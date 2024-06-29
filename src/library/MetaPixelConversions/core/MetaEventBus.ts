@@ -1,11 +1,33 @@
-import { BaseBus, BaseEvent, ErrorHandler, EventHandler } from "./Abstractions";
-import { BaseException, EventHandlerException, MetaEventBusException, EventReceiptError } from "./Exceptions";
+import {
+  BaseBus,
+  BaseEvent,
+  ErrorHandler,
+  EventHandler,
+  MetaCustomEvent,
+  MetaStandardEvent,
+} from "./Abstractions";
+import {
+  BaseException,
+  EventHandlerException,
+  MetaEventBusException,
+  EventReceiptError,
+  MetaServerError,
+  MetaRequestError,
+  MetaRequestLimitError,
+  MetaClientException,
+} from "./Exceptions";
 import { MetaConversionsClient } from "./MetaClient";
+import { TaskQueue, retry } from "../utils";
+
+const MAX_EVENT_SENDING_RETRIES = 5;
+const RETRY_DELAY = 1000;
+const RETRY_BACKOFF = 2;
 
 export class MetaEventBus extends BaseBus {
   private errorHandlerRegistry: Map<string, ErrorHandler<BaseEvent, BaseException>> = new Map();
   private handlerRegistry: Map<string, EventHandler<BaseEvent>> = new Map();
   private metaSdkClient: MetaConversionsClient | undefined;
+  private taskQueue = new TaskQueue();
   private busInitialized = false;
 
   constructor(metaPixelAccessToken: string, pixelId: string, testEventCode?: string) {
@@ -57,39 +79,53 @@ export class MetaEventBus extends BaseBus {
     this.errorHandlerRegistry.set(exceptionName, errHandler as ErrorHandler<BaseEvent, BaseException>);
   }
 
-  async handle(event: BaseEvent): Promise<any> {
+  async handle(event: MetaStandardEvent | MetaCustomEvent): Promise<any> {
+    return this.taskQueue.enqueue(() => this.processEvent(event));
+  }
+
+  private async processEvent(event: MetaStandardEvent | MetaCustomEvent): Promise<any> {
     if (!this.busInitialized) {
       throw new MetaEventBusException("Bus not initialized");
     }
 
     const handlerFn = this.handlerRegistry.get(event.constructor.name);
     if (!handlerFn) {
-      throw new Error(`No handler registered for event ${event.constructor.name}`);
+      throw new MetaEventBusException(`No handler registered for event ${event.constructor.name}`);
     }
 
     try {
       return await handlerFn(event, this.metaSdkClient);
     } catch (error) {
-      this.handleErrors(error as BaseException);
+      return this.handleErrors(event, handlerFn, error);
     }
   }
 
-  handleErrors(error: BaseException): void {
-    if (error instanceof EventHandlerException) {
-      console.log("Handling EventHandlerException ......", error.errorData);
-      console.log("finished handling error ......");
+  async handleErrors<T extends BaseEvent, K extends BaseException>(
+    event: T,
+    errHandler: any,
+    error: K
+  ): Promise<any> {
+    if (error instanceof MetaServerError || error instanceof MetaRequestError) {
+      console.log("Attempting to retry...");
+      try {
+        const result = await retry(
+          () => errHandler(event, this.metaSdkClient),
+          MAX_EVENT_SENDING_RETRIES,
+          RETRY_DELAY,
+          RETRY_BACKOFF
+        );
+        console.log("Retry successful");
+        return { success: true, metadata: result };
+      } catch (retryError) {
+        console.log("Retry failed after maximum attempts: ", retryError.message);
+        return { success: false, metadata: { message: retryError.message } };
+      }
     }
-    if (error instanceof MetaEventBusException) {
-      console.log("Handling MetaEventBusException ......", error.errorData);
-      console.log("finished handling error ......");
+    if (error instanceof MetaRequestLimitError) {
+      console.log("Handling MetaRequestLimitError ......", error.errorData);
+      console.log("Finished handling MetaRequestLimitError ......");
+      return Promise.resolve();
     }
-    if (error instanceof EventReceiptError) {
-      console.log("Handling EventReceiptError ......", error.errorData);
-      console.log("finished handling error ......");
-    }
-    if (error instanceof BaseException) {
-      console.log("Handling BaseException ......", error.errorData);
-      console.log("finished handling error ......");
-    }
+    return Promise.reject(error);
   }
 }
