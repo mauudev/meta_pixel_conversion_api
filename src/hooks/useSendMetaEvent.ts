@@ -36,7 +36,6 @@ export const useSendMetaEvent = () => {
         TRACKING_EVENTS[eventType] &&
         new TRACKING_EVENTS[eventType](eventData.userData, eventData.customData);
 
-      metaEventBusRef.current.sayHello();
       const result = await Promise.all([metaEventBusRef.current.handle(event)]);
       setResults(result);
       setIsLoading(false);

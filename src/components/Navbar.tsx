@@ -16,7 +16,7 @@ import { useSendMetaEvent } from "../hooks";
 import "./Navbar.css";
 
 export default function Navbar() {
-  const { sendEvent, isLoading, error } = useSendMetaEvent();
+  const { sendEvent } = useSendMetaEvent();
   const { colorMode, toggleColorMode } = useColorMode();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
