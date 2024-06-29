@@ -8,13 +8,10 @@ import {
 } from "./Abstractions";
 import {
   BaseException,
-  EventHandlerException,
   MetaEventBusException,
-  EventReceiptError,
   MetaServerError,
   MetaRequestError,
   MetaRequestLimitError,
-  MetaClientException,
 } from "./Exceptions";
 import { MetaConversionsClient } from "./MetaClient";
 import { TaskQueue, retry } from "../utils";
