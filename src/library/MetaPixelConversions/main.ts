@@ -1,6 +1,6 @@
 import { MetaEventBus } from "./core/MetaEventBus";
-import { PurchaseEvent } from "./StandardEvents";
-import { purchaseEventHandler } from "./EventHandlers";
+import { AddToCartEvent, PurchaseEvent } from "./StandardEvents";
+import { addToCartEventHandler, purchaseEventHandler } from "./EventHandlers";
 import { config } from "dotenv-esm";
 
 config();
@@ -62,9 +62,23 @@ const eventData = [
 
 const metaEventBus = new MetaEventBus(META_ACCESS_TOKEN, PIXEL_ID, TEST_EVENT_CODE);
 metaEventBus.register(PurchaseEvent, purchaseEventHandler);
+metaEventBus.register(AddToCartEvent, addToCartEventHandler);
 metaEventBus.initialize();
 
 const events = eventData.map((data) => new PurchaseEvent(data.userData, data.customData));
+
+const userData = {
+  emails: ["mtrigo1434@gmail.com"],
+  phones: ["123456789"],
+};
+
+const customData = {
+  content_ids: ["1234"],
+  content_name: "Product Name",
+  content_type: "product",
+};
+
+events.push(new AddToCartEvent(userData, customData));
 
 async function processEvents(events) {
   try {
