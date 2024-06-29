@@ -12,9 +12,11 @@ import {
 } from "@chakra-ui/react";
 import { MoonIcon, SunIcon, HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import ReactPixel from "react-facebook-pixel";
+import { useSendMetaEvent } from "../hooks";
 import "./Navbar.css";
 
 export default function Navbar() {
+  const { sendEvent, isLoading, error } = useSendMetaEvent();
   const { colorMode, toggleColorMode } = useColorMode();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -23,11 +25,24 @@ export default function Navbar() {
   ReactPixel.track("PageView");
 
   const onButtonClick = () => {
-    ReactPixel.track("Purchase", {
-      value: 9.99,
-      currency: "USD",
-    });
-    console.log("Purchase was made!");
+    // ReactPixel.track("Purchase", {
+    //   value: 9.99,
+    //   currency: "USD",
+    // });
+    // console.log("Purchase was made!");
+    const eventData = {
+      customData: {
+        value: 100,
+        currency: "USD",
+        num_items: 1,
+      },
+      userData: {
+        emails: ["mtrigo143@gmail.com"],
+        phones: ["123456789"],
+      },
+    };
+
+    sendEvent("PURCHASE", eventData);
   };
 
   const navButtons = [
