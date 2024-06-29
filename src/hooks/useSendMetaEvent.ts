@@ -3,9 +3,14 @@ import { MetaEventBus } from "../library/MetaPixelConversions/core/MetaEventBus"
 import { AddToCartEvent, PurchaseEvent } from "../library/MetaPixelConversions/StandardEvents";
 import { addToCartEventHandler, purchaseEventHandler } from "../library/MetaPixelConversions/EventHandlers";
 
-const META_ACCESS_TOKEN = process.env.META_ACCESS_TOKEN;
-const PIXEL_ID = process.env.PIXEL_ID;
-const TEST_EVENT_CODE = process.env.TEST_EVENT_CODE;
+const META_ACCESS_TOKEN = "<access_token>";
+const PIXEL_ID = "<pixel_id>";
+const TEST_EVENT_CODE = "<test_event_code>";
+
+const TRACKING_EVENTS = {
+  PURCHASE: PurchaseEvent,
+  ADD_TO_CART: AddToCartEvent,
+};
 
 export const useSendMetaEvent = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -22,17 +27,18 @@ export const useSendMetaEvent = () => {
     }
   }, []);
 
-  const sendEvents = async (events) => {
+  const sendEvent = async (eventType: string, eventData: { userData: any; customData: any }) => {
     setIsLoading(true);
     setError(null);
 
     try {
-      const processedEvents = events.map((data) => new PurchaseEvent(data.userData, data.customData));
-      const results = await Promise.allSettled(
-        processedEvents.map((event) => metaEventBusRef.current.handle(event))
-      );
+      const event =
+        TRACKING_EVENTS[eventType] &&
+        new TRACKING_EVENTS[eventType](eventData.userData, eventData.customData);
 
-      setResults(results);
+      metaEventBusRef.current.sayHello();
+      const result = await Promise.all([metaEventBusRef.current.handle(event)]);
+      setResults(result);
       setIsLoading(false);
     } catch (err) {
       setError(err);
@@ -40,5 +46,5 @@ export const useSendMetaEvent = () => {
     }
   };
 
-  return { sendEvents, isLoading, results, error };
+  return { sendEvent, isLoading, results, error };
 };
