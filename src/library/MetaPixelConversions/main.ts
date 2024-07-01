@@ -15,49 +15,49 @@ console.log("TEST_EVENT_CODE: ", TEST_EVENT_CODE);
 
 const eventData = [
   {
-    customData: {
-      value: 100,
-      currency: "USD",
-      num_items: 1,
-    },
+    // customData: {
+    //   value: 100,
+    //   currency: "USD",
+    //   num_items: 1,
+    // },
     userData: {
       emails: ["mtrigo143@gmail.com"],
       phones: ["123456789"],
     },
   },
-  {
-    customData: {
-      value: 200,
-      currency: "USD",
-      num_items: 1,
-    },
-    userData: {
-      emails: ["mtrigo1432@gmail.com"],
-      phones: ["123456789"],
-    },
-  },
-  {
-    customData: {
-      value: 300,
-      currency: "USD",
-      num_items: 1,
-    },
-    userData: {
-      emails: ["mtrigo1433@gmail.com"],
-      phones: ["123456789"],
-    },
-  },
-  {
-    customData: {
-      value: 400,
-      currency: "USD",
-      num_items: 1,
-    },
-    userData: {
-      emails: ["mtrigo1434@gmail.com"],
-      phones: ["123456789"],
-    },
-  },
+  // {
+  //   customData: {
+  //     value: 200,
+  //     currency: "USD",
+  //     num_items: 1,
+  //   },
+  //   userData: {
+  //     emails: ["mtrigo1432@gmail.com"],
+  //     phones: ["123456789"],
+  //   },
+  // },
+  // {
+  //   customData: {
+  //     value: 300,
+  //     currency: "USD",
+  //     num_items: 1,
+  //   },
+  //   userData: {
+  //     emails: ["mtrigo1433@gmail.com"],
+  //     phones: ["123456789"],
+  //   },
+  // },
+  // {
+  //   customData: {
+  //     value: 400,
+  //     currency: "USD",
+  //     num_items: 1,
+  //   },
+  //   userData: {
+  //     emails: ["mtrigo1434@gmail.com"],
+  //     phones: ["123456789"],
+  //   },
+  // },
 ];
 
 const metaEventBus = new MetaEventBus(META_ACCESS_TOKEN, PIXEL_ID, TEST_EVENT_CODE);
@@ -67,18 +67,18 @@ metaEventBus.initialize();
 
 const events = eventData.map((data) => new PurchaseEvent(data.userData, data.customData));
 
-const userData = {
-  emails: ["mtrigo1434@gmail.com"],
-  phones: ["123456789"],
-};
+// const userData = {
+//   emails: ["mtrigo1434@gmail.com"],
+//   phones: ["123456789"],
+// };
 
-const customData = {
-  content_ids: ["1234"],
-  content_name: "Product Name",
-  content_type: "product",
-};
+// const customData = {
+//   content_ids: ["1234"],
+//   content_name: "Product Name",
+//   content_type: "product",
+// };
 
-events.push(new AddToCartEvent(userData, customData));
+// events.push(new AddToCartEvent(userData, customData));
 
 async function processEvents(events) {
   try {

@@ -3,9 +3,10 @@ import { MetaEventBus } from "../library/MetaPixelConversions/core/MetaEventBus"
 import { AddToCartEvent, PurchaseEvent } from "../library/MetaPixelConversions/StandardEvents";
 import { addToCartEventHandler, purchaseEventHandler } from "../library/MetaPixelConversions/EventHandlers";
 
-const META_ACCESS_TOKEN = "<access_token>";
-const PIXEL_ID = "<pixel_id>";
-const TEST_EVENT_CODE = "<test_event_code>";
+const META_ACCESS_TOKEN =
+  "EAAGhTpVxZCKQBOx5796S4JVHZCrCPuO8IXNzNnlory15vrZBoJcQNaKBmyDXdfM1JCsXyFi578Exjk8btcRikRAgO8B3ezJKksFkill5T3zhaiqoSsxbRpgKkfF7X6Q16YXinOnZBUjwvR8hFYXDTsy9bOouUl5T7UOSylOZC3JQZA2JyEvZBYaxWytCQPBejMemgZDZD";
+const PIXEL_ID = "435714932594774";
+const TEST_EVENT_CODE = "TEST29800";
 
 const TRACKING_EVENTS = {
   PURCHASE: PurchaseEvent,

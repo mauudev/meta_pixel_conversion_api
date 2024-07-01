@@ -26,9 +26,9 @@ export const AddToCartButton = ({ product }) => {
   return (
     <div>
       <button onClick={handleAddToCart} disabled={isLoading}>
-        {isLoading ? "Agregando..." : "Agregar al Carrito"}
+        {isLoading ? "Adding to Cart..." : "Add to Cart"}
       </button>
-      {error && <p>Error al enviar el evento: {error.message}</p>}
+      {error && <p>Error sending the event: {error.message}</p>}
     </div>
   );
 };

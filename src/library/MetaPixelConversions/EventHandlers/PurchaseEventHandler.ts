@@ -1,6 +1,7 @@
 import { PurchaseEvent } from "../StandardEvents";
 import { MetaConversionsClient } from "../core";
 import { mapToException } from "../utils";
+// import { FacebookRequestError } from "facebook-nodejs-business-sdk";
 
 export const purchaseEventHandler = async (
   event: PurchaseEvent,
@@ -11,9 +12,8 @@ export const purchaseEventHandler = async (
     const response = await metaSdkClient.sendEvent(event.buildEvent());
     console.log(`--> result: ${JSON.stringify(response)}`);
     return response;
-  } catch (error) {
-    if (error.response && error.response.code) {
-      mapToException(error);
-    }
+  } catch (error: any) {
+    console.error("============> Facebook error:", error);
+    // mapToException(error);
   }
 };
