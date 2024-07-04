@@ -45,7 +45,7 @@ export class MetaEventBus extends BaseBus {
     } catch (error) {
       throw new MetaEventBusException(`Error initializing Meta SDK client: ${(error as Error).message}`);
     }
-    console.log(`bus initialized: ${JSON.stringify(this.metaSdkClient, null, 2)}`);
+    console.log(`Bus initialized: ${JSON.stringify(this.metaSdkClient)}`);
     this.busInitialized = true;
   }
 
@@ -58,7 +58,7 @@ export class MetaEventBus extends BaseBus {
   }
 
   register<T extends BaseEvent>(eventClass: typeof BaseEvent, handler: EventHandler<T>): void {
-    console.log("Registering event: ", eventClass.name);
+    console.log(`Registering event: ${eventClass.name}`);
     const eventName = eventClass.name;
     if (!eventName || eventName.trim() === "") {
       throw new MetaEventBusException("Unable to register event, provide a valid event class");
@@ -78,7 +78,7 @@ export class MetaEventBus extends BaseBus {
   }
 
   async handle(event: MetaStandardEvent | MetaCustomEvent): Promise<any> {
-    console.log("Handling event: ", event.constructor.name);
+    console.log(`Handling event: ${event.constructor.name}`);
     return this.taskQueue.enqueue(() => this.processEvent(event));
   }
 
@@ -92,10 +92,9 @@ export class MetaEventBus extends BaseBus {
     }
 
     try {
-      console.log("---> Processing event: ", event.constructor.name);
       return await handlerFn(event, this.metaSdkClient);
     } catch (error) {
-      return this.handleErrors(event, handlerFn, error);
+      return this.handleErrors(event, handlerFn, error as BaseException);
     }
   }
 
@@ -105,7 +104,7 @@ export class MetaEventBus extends BaseBus {
     error: K
   ): Promise<any> {
     if (error instanceof MetaServerError || error instanceof MetaRequestError) {
-      console.log("Attempting to retry...");
+      console.log(`Sending event: '${event.constructor.name}' failed, retrying ...`);
       try {
         const result = await retry(
           () => errHandler(event, this.metaSdkClient),
@@ -113,16 +112,12 @@ export class MetaEventBus extends BaseBus {
           RETRY_DELAY,
           RETRY_BACKOFF
         );
-        console.log("Retry successful");
         return { success: true, metadata: result };
-      } catch (retryError) {
-        console.log("Retry failed after maximum attempts: ", retryError.message);
+      } catch (retryError: any) {
         return { success: false, metadata: { message: retryError.message } };
       }
     }
     if (error instanceof MetaRequestLimitError) {
-      console.log("Handling MetaRequestLimitError ......", error.errorData);
-      console.log("Finished handling MetaRequestLimitError ......");
       return Promise.resolve();
     }
     return Promise.reject(error);

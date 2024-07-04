@@ -2,9 +2,9 @@ import { META_ERROR_CODES } from "./core/ErrorCodes";
 import {
   EventSentError,
   MetaClientException,
-  MetaRequestError,
   MetaRequestLimitError,
   MetaServerError,
+  MetaRequestError,
 } from "./core/Exceptions";
 
 export const mapToException = (error: any) => {
@@ -12,13 +12,21 @@ export const mapToException = (error: any) => {
   if (!errorCode) {
     throw new EventSentError("No error code found in response", error.response);
   }
-  if (META_ERROR_CODES.metaServerErrors[errorCode]) {
+  if (META_ERROR_CODES.metaServerErrors[errorCode as keyof typeof META_ERROR_CODES.metaServerErrors]) {
     throw new MetaServerError(`An error occurred while sending the event: ${error.message}`, error.response);
   }
-  if (META_ERROR_CODES.metaRequestErrors[errorCode]) {
-    throw new MetaRequestError(`An error occurred while sending the event: ${error.message}`, error.response);
+  if (META_ERROR_CODES.metaRequestErrors[errorCode as keyof typeof META_ERROR_CODES.metaRequestErrors]) {
+    throw new MetaRequestError(
+      `An error occurred while sending the event: ${error.message}`,
+      error.response.status,
+      error.response,
+      error.headers,
+      error.errorData
+    );
   }
-  if (META_ERROR_CODES.metaRequestLimitErrors[errorCode]) {
+  if (
+    META_ERROR_CODES.metaRequestLimitErrors[errorCode as keyof typeof META_ERROR_CODES.metaRequestLimitErrors]
+  ) {
     throw new MetaRequestLimitError(
       `An error occurred while sending the event: ${error.message}`,
       error.response

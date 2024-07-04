@@ -1,10 +1,10 @@
 import { UserDataSchema, CustomDataSchema, MetaStandardEvent, EventName } from '../core/Abstractions'
 import { EventValidationError } from '../core/Exceptions'
-import Joi from 'joi'
+import { z } from 'zod'
 
-const leadEventSchema = Joi.object({
-	content_category: Joi.string().required(),
-	content_name: Joi.string().required(),
+const leadEventSchema = z.object({
+	content_category: z.string(),
+	content_name: z.string(),
 })
 
 export class LeadEvent extends MetaStandardEvent {
@@ -15,8 +15,9 @@ export class LeadEvent extends MetaStandardEvent {
 	}
 
 	validate(): void {
-		const isValid = leadEventSchema.validate(this.customData).error === undefined
-		if (!isValid) {
+		const result = leadEventSchema.safeParse(this.customData)
+
+		if (!result.success) {
 			throw new EventValidationError(
 				`Error creating '${this.eventName}' event: Invalid data, provide the required parameters.`
 			)

@@ -1,13 +1,13 @@
 import { CustomDataSchema, UserDataSchema, EventName, MetaCustomEvent } from '../core/Abstractions'
 import { EventValidationError } from '../core/Exceptions'
-import Joi from 'joi'
+import { z } from 'zod'
 
-const viewCategoryEventSchema = Joi.object({
-	category_path: Joi.string().required(),
-	brand: Joi.string().optional(),
-	model: Joi.string().optional(),
-	product_type: Joi.string().optional(),
-	type: Joi.string().optional(),
+const viewCategoryEventSchema = z.object({
+	category_path: z.string(),
+	brand: z.string().optional(),
+	model: z.string().optional(),
+	product_type: z.string().optional(),
+	type: z.string().optional(),
 })
 
 export class ViewCategoryEvent extends MetaCustomEvent {
@@ -18,8 +18,9 @@ export class ViewCategoryEvent extends MetaCustomEvent {
 	}
 
 	validate(): void {
-		const isValid = viewCategoryEventSchema.validate(this.customData).error === undefined
-		if (!isValid) {
+		const result = viewCategoryEventSchema.safeParse(this.customData)
+
+		if (!result.success) {
 			throw new EventValidationError(
 				`Error creating '${this.eventName}' event: Invalid data, provide the required parameters.`
 			)

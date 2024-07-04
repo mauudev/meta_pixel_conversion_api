@@ -1,12 +1,12 @@
 import { UserDataSchema, CustomDataSchema, MetaCustomEvent, EventName } from '../core/Abstractions'
 import { EventValidationError } from '../core/Exceptions'
-import Joi from 'joi'
+import { z } from 'zod'
 
-const abandonedCheckoutEventSchema = Joi.object({
-	content_ids: Joi.array().items(Joi.string()).required(),
-	num_items: Joi.number().integer().required(),
-	currency: Joi.string().valid('DKK').required(),
-	value: Joi.number().required(),
+const abandonedCheckoutEventSchema = z.object({
+	content_ids: z.array(z.string()).nonempty(),
+	num_items: z.number().int(),
+	currency: z.enum(['DKK']),
+	value: z.number(),
 })
 
 export class AbandonedCheckoutEvent extends MetaCustomEvent {
@@ -17,8 +17,9 @@ export class AbandonedCheckoutEvent extends MetaCustomEvent {
 	}
 
 	validate(): void {
-		const isValid = abandonedCheckoutEventSchema.validate(this.customData).error === undefined
-		if (!isValid) {
+		const result = abandonedCheckoutEventSchema.safeParse(this.customData)
+
+		if (!result.success) {
 			throw new EventValidationError(
 				`Error creating '${this.eventName}' event: Invalid data, provide the required parameters.`
 			)

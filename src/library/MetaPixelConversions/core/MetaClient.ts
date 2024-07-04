@@ -64,7 +64,7 @@ export class MetaConversionsClient {
       undefined, // partner id
       this._testEventCode
     );
-    console.log("[SDK]: Sending event(s) to Meta API: ", JSON.stringify(eventsData, null, 2));
+    console.log(`Sending event to Meta Conversions API: ${JSON.stringify(eventsData)}`);
     return await eventRequest.execute();
   }
 }

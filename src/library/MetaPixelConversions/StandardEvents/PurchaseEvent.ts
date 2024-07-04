@@ -1,11 +1,11 @@
 import { UserDataSchema, CustomDataSchema, MetaStandardEvent, EventName } from '../core/Abstractions'
 import { EventValidationError } from '../core/Exceptions'
-import Joi from 'joi'
+import { z } from 'zod'
 
-const purchaseEventSchema = Joi.object({
-	value: Joi.number().required(),
-	currency: Joi.string().required(),
-	num_items: Joi.number().required(),
+const purchaseEventSchema = z.object({
+	value: z.number(),
+	currency: z.string(),
+	num_items: z.number().int(),
 })
 
 export class PurchaseEvent extends MetaStandardEvent {
@@ -16,8 +16,9 @@ export class PurchaseEvent extends MetaStandardEvent {
 	}
 
 	validate(): void {
-		const isValid = purchaseEventSchema.validate(this.customData).error === undefined
-		if (!isValid) {
+		const result = purchaseEventSchema.safeParse(this.customData)
+
+		if (!result.success) {
 			throw new EventValidationError(
 				`Error creating '${this.eventName}' event: Invalid data, provide the required parameters.`
 			)

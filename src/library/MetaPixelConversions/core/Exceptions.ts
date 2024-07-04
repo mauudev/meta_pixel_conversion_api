@@ -1,109 +1,59 @@
 /**
- * BaseExceptions
+ * Meta Event Framework Base exception class
  */
 export class BaseException extends Error {
-  errorData: any;
-
-  constructor(message?: string, errorData?: any) {
-    super(message);
-    Object.setPrototypeOf(this, new.target.prototype);
-    this.errorData = errorData;
-  }
+	constructor(
+		message: string,
+		public status?: number,
+		public response?: {
+			message: string
+			type: string
+			code: number
+			error_subcode: number
+			is_transient: boolean
+			error_user_title: string
+			error_user_msg: string
+			fbtrace_id: string
+		},
+		public headers?: any,
+		public data?: any
+	) {
+		super(message)
+	}
 }
 
 /**
- * Bus exceptions
+ * Meta Event Bus exceptions
  */
-export class MetaEventBusException extends BaseException {
-  constructor(message?: string, errorData?: any) {
-    super(message || "MetaEventBusException");
-    this.errorData = errorData;
-  }
-}
+export class MetaEventBusException extends BaseException {}
 
 /**
- * Handler exceptions
+ * Event Handler exceptions
  */
+export class EventHandlerException extends BaseException {}
 
-export class EventHandlerException extends BaseException {
-  constructor(message?: string, errorData?: any) {
-    super(message || "EventHandlerException");
-    this.errorData = errorData;
-  }
-}
+export class EventHandlerInitializationError extends EventHandlerException {}
 
-export class EventHandlerInitializationError extends EventHandlerException {
-  constructor(message?: string, errorData?: any) {
-    super(message || "EventHandlerInitializationError");
-    this.errorData = errorData;
-  }
-}
-
-export class EventReceiptError extends EventHandlerException {
-  constructor(message?: string, errorData?: any) {
-    super(message || "EventReceiptError");
-    this.errorData = errorData;
-  }
-}
-
-/**
- * MetaClient exceptions
- */
-export class MetaClientException extends BaseException {
-  constructor(message?: string, errorData?: any) {
-    super(message || "MetaClientException");
-    this.errorData = errorData;
-  }
-}
-
-export class MetaServerError extends MetaClientException {
-  constructor(message?: string, errorData?: any) {
-    super(message || "MetaServerError");
-    this.errorData = errorData;
-  }
-}
-
-export class MetaRequestLimitError extends MetaClientException {
-  constructor(message?: string, errorData?: any) {
-    super(message || "MetaRequestLimitError");
-    this.errorData = errorData;
-  }
-}
-
-export class MetaRequestError extends MetaClientException {
-  constructor(message?: string, errorData?: any) {
-    super(message || "MetaRequestError");
-    this.errorData = errorData;
-  }
-}
-
-export class MetaClientInitializationError extends MetaClientException {
-  constructor(message?: string, errorData?: any) {
-    super(message || "MetaClientInitializationError");
-    this.errorData = errorData;
-  }
-}
+export class EventReceiptError extends EventHandlerException {}
 
 /**
  * Event exceptions
  */
-export class EventException extends BaseException {
-  constructor(message?: string, errorData?: any) {
-    super(message || "EventException");
-    this.errorData = errorData;
-  }
-}
+export class EventException extends BaseException {}
 
-export class EventValidationError extends EventException {
-  constructor(message?: string, errorData?: any) {
-    super(message || "EventValidationError");
-    this.errorData = errorData;
-  }
-}
+export class EventValidationError extends EventException {}
 
-export class EventSentError extends EventException {
-  constructor(message?: string, errorData?: any) {
-    super(message || "EventSentError");
-    this.errorData = errorData;
-  }
-}
+export class EventSentError extends EventException {}
+
+/**
+ * Meta SDK Client Exceptions
+ */
+export class MetaClientException extends BaseException {}
+
+export class MetaServerError extends MetaClientException {}
+
+export class MetaRequestLimitError extends MetaClientException {}
+
+export class MetaRequestError extends MetaClientException {}
+
+export class MetaClientInitializationError extends MetaClientException {}
