@@ -19,6 +19,8 @@ Examples of containers are:
 - Database
 - API
 - Message buses
+- Microservice
+- etc.
 
 ## Component
 The Component level zooms into a container, showing the internal structure and building blocks of that container and how those building blocks relate to one another. It focuses on the key responsibilities within the container and how they interact with one another.
