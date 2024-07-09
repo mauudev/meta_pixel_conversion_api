@@ -25,10 +25,38 @@ The Component level zooms into a container, showing the internal structure and b
 
 As we dive deeper we start to get into more technical details and start to delve into the realm that is more exclusively for designers, architects, and the software implementers. Next we have the Component level, and this is what we get when we zoom in on a container and see the building blocks that it comprises of. For example, suppose we zoom in on an ETL Pipeline and look at the components that make it up. We might see an extraction component, a validation component, a transform component, a loading component, and a monitoring and logging component. This is the layer of services, controllers, repositories, etc. and provides a more granular view of the structure of the overall system architecture. This is especially important for the architects and the developers because it provides details necessary for developing the actual code.
 
+Examples of components are:
+- Services
+- Controllers
+- Repositories
+- Models
+- Views
+- Modules
+- Packages
+- Libraries
+- Frameworks
+- Databases
+- Queues
+- Caches
+- APIs
+- Message brokers
+- etc.
+
 ## Code
 The Code level provides a detailed view of the code structure of the component, showing details such as the classes, modules, and packages. This aids developers in understanding the actual implementation of these components.
 
 The final level of the C4 model is the code level and represents the individual code elements within the software architecture. These are the tiniest elements of the model, and represent specific classes, modules, interfaces, and other code elements. It provides an extremely detailed view of the architecture and is useful for developers implementing the code and answering questions like, "What does this class look like" and "How do I implement this interface" and "What is the relationship between these classes?"
+
+Examples of code elements are:
+- Classes
+- Modules
+- Interfaces
+- Functions
+- Methods
+- Variables
+- Constants
+- etc.
+
 
 # From copilot
 # System Context
