@@ -5,6 +5,11 @@ As a communication tool, the C4 model enables all stakeholders, not just develop
 ## System Context
 The Context level provides a birds-eye view of the system, giving an overview of system boundaries, external actors (users), and their interactions with the system.
 This level answers the question, "What is the system and how does it interface with the external world? How does it interact with actors, or users?" It provides a very high-level overview of the overall software architecture.
+Examples of external actors are:
+- Users
+- External systems
+- Third-party services
+- etc.
 
 ## Container
 The Container level focuses on the major architectural building blocks of the system. This can include web servers, databases, desktop apps, microservices, or external services such as APIs. It communicates how these systems interact with each other.
