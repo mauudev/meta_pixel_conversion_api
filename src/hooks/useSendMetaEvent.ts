@@ -3,8 +3,7 @@ import { MetaEventBus } from "../library/MetaPixelConversions/core/MetaEventBus"
 import { AddToCartEvent, PurchaseEvent } from "../library/MetaPixelConversions/StandardEvents";
 import { addToCartEventHandler, purchaseEventHandler } from "../library/MetaPixelConversions/EventHandlers";
 
-const META_ACCESS_TOKEN =
-  "<your-awesome-key>";
+const META_ACCESS_TOKEN ="<your-awesome-key>";
 const PIXEL_ID = "123456";
 const TEST_EVENT_CODE = "TEST29800";
 
