@@ -4,8 +4,8 @@ import { AddToCartEvent, PurchaseEvent } from "../library/MetaPixelConversions/S
 import { addToCartEventHandler, purchaseEventHandler } from "../library/MetaPixelConversions/EventHandlers";
 
 const META_ACCESS_TOKEN =
-  "EAAGhTpVxZCKQBOx5796S4JVHZCrCPuO8IXNzNnlory15vrZBoJcQNaKBmyDXdfM1JCsXyFi578Exjk8btcRikRAgO8B3ezJKksFkill5T3zhaiqoSsxbRpgKkfF7X6Q16YXinOnZBUjwvR8hFYXDTsy9bOouUl5T7UOSylOZC3JQZA2JyEvZBYaxWytCQPBejMemgZDZD";
-const PIXEL_ID = "435714932594774";
+  "<your-awesome-key>";
+const PIXEL_ID = "123456";
 const TEST_EVENT_CODE = "TEST29800";
 
 const TRACKING_EVENTS = {
